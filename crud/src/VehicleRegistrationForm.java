@@ -1,65 +1,40 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
-
+import javax.swing.table.TableCellEditor;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
 
 public class VehicleRegistrationForm extends JFrame {
+    private List<Vehiculo> vehiculos = new ArrayList<>();
     private JTextField picField;
     private JTextField colorField;
     private JPanel tablePanel;
     private DefaultTableModel tableModel;
     private JTable table;
     private JComboBox<String> transactionTypeComboBox;
-    private JTextField rentalDaysField; 
+    private JTextField rentalDaysField;
+
+    private JTextField nameField;
+    private JTextField lastNameField;
+    private JTextField idField;
+    private JTextField phoneField;
+    private JTextField addressField;
+    private JTextField plateField;
+    private JTextField yearField;
+    private JComboBox<String> brandComboBox;
+    private JComboBox<String> modelComboBox;
+    private JButton submitButton;
+    private JButton saveChangesButton; 
+
     
-    // Clase interna para renderizar botones en la tabla
-    class ButtonRenderer extends JButton implements TableCellRenderer {
-        public ButtonRenderer() {
-            setOpaque(true);
-        }
 
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            setText((value == null) ? "" : value.toString());
-            return this;
-        }
-    }
-
-    // Clase interna para editar botones en la tabla
-    class ButtonEditor extends DefaultCellEditor {
-        protected JButton button;
-        private String label;
-
-        public ButtonEditor(JCheckBox checkBox) {
-            super(checkBox);
-            button = new JButton();
-            button.setOpaque(true);
-            button.addActionListener(e -> fireEditingStopped());
-        }
-
-        @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            label = (value == null) ? "" : value.toString();
-            button.setText(label);
-            return button;
-        }
-
-        @Override
-        public Object getCellEditorValue() {
-            return label;
-        }
-    }
-
-     
     public VehicleRegistrationForm() {
-         setTitle("Registro de Vehículos");
+        setTitle("Registro de Vehículos");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -69,7 +44,6 @@ public class VehicleRegistrationForm extends JFrame {
         headerPanel.setPreferredSize(new Dimension(800, 40));
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        
         JLabel titleLabel = new JLabel("GENERAL MOTORS C.A");
         titleLabel.setFont(new Font("Cambria", Font.PLAIN, 24));
         titleLabel.setForeground(Color.WHITE);
@@ -96,7 +70,7 @@ public class VehicleRegistrationForm extends JFrame {
         gbc.gridwidth = 1;
         gbc.gridy++;
         formPanel.add(new JLabel("Nombre:"), gbc);
-        JTextField nameField = new JTextField(20);
+        nameField = new JTextField(20);
         gbc.gridx = 1;
         gbc.gridwidth = 2;
         formPanel.add(nameField, gbc);
@@ -105,7 +79,7 @@ public class VehicleRegistrationForm extends JFrame {
         gbc.gridy++;
         gbc.gridwidth = 1;
         formPanel.add(new JLabel("Apellido:"), gbc);
-        JTextField lastNameField = new JTextField(20);
+        lastNameField = new JTextField(20);
         gbc.gridx = 1;
         gbc.gridwidth = 2;
         formPanel.add(lastNameField, gbc);
@@ -114,7 +88,7 @@ public class VehicleRegistrationForm extends JFrame {
         gbc.gridy++;
         gbc.gridwidth = 1;
         formPanel.add(new JLabel("Cédula:"), gbc);
-        JTextField idField = new JTextField(15);
+        idField = new JTextField(15);
         gbc.gridx = 1;
         gbc.gridwidth = 2;
         formPanel.add(idField, gbc);
@@ -123,7 +97,7 @@ public class VehicleRegistrationForm extends JFrame {
         gbc.gridy++;
         gbc.gridwidth = 1;
         formPanel.add(new JLabel("Teléfono:"), gbc);
-        JTextField phoneField = new JTextField(11);
+        phoneField = new JTextField(11);
         gbc.gridx = 1;
         gbc.gridwidth = 2;
         formPanel.add(phoneField, gbc);
@@ -132,7 +106,7 @@ public class VehicleRegistrationForm extends JFrame {
         gbc.gridy++;
         gbc.gridwidth = 1;
         formPanel.add(new JLabel("Dirección:"), gbc);
-        JTextField addressField = new JTextField(20);
+        addressField = new JTextField(20);
         gbc.gridx = 1;
         gbc.gridwidth = 2;
         formPanel.add(addressField, gbc);
@@ -148,7 +122,7 @@ public class VehicleRegistrationForm extends JFrame {
         gbc.gridwidth = 1;
         gbc.gridy++;
         formPanel.add(new JLabel("Placa:"), gbc);
-        JTextField plateField = new JTextField(7);
+        plateField = new JTextField(7);
         gbc.gridx = 1;
         gbc.gridwidth = 2;
         formPanel.add(plateField, gbc);
@@ -157,29 +131,29 @@ public class VehicleRegistrationForm extends JFrame {
         gbc.gridy++;
         gbc.gridwidth = 1;
         formPanel.add(new JLabel("Año del vehículo:"), gbc);
-        JTextField yearField = new JTextField(4);
+        yearField = new JTextField(4);
         gbc.gridx = 1;
         gbc.gridwidth = 2;
         formPanel.add(yearField, gbc);
-        
+
         gbc.gridx = 0;
         gbc.gridy++;
         formPanel.add(new JLabel("Marca:"), gbc);
         String[] brands = {"Marca1", "Marca2", "Marca3", "Marca4", "Marca5"};
-        JComboBox<String> brandComboBox = new JComboBox<>(brands);
+        brandComboBox = new JComboBox<>(brands);
         gbc.gridx = 1;
         formPanel.add(brandComboBox, gbc);
 
         gbc.gridx = 0;
         gbc.gridy++;
         formPanel.add(new JLabel("Modelo:"), gbc);
-        JComboBox<String> modelComboBox = new JComboBox<>();
+        modelComboBox = new JComboBox<>();
         modelComboBox.addItem("Modelo1");
         modelComboBox.addItem("Modelo2");
         gbc.gridx = 1;
         formPanel.add(modelComboBox, gbc);
 
-         gbc.gridx = 0;
+        gbc.gridx = 0;
         gbc.gridy++;
         gbc.gridwidth = 1;
         formPanel.add(new JLabel("Color:"), gbc);
@@ -190,6 +164,8 @@ public class VehicleRegistrationForm extends JFrame {
         formPanel.add(colorField, gbc);
 
         JButton colorButton = new JButton("Elegir Color");
+        colorButton.setBackground(Color.decode("#010035"));
+        colorButton.setForeground(Color.WHITE);
         colorButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -203,8 +179,6 @@ public class VehicleRegistrationForm extends JFrame {
         gbc.gridx = 2;
         formPanel.add(colorButton, gbc);
 
-   
-
         gbc.gridx = 0;
         gbc.gridy++;
         gbc.gridwidth = 1;
@@ -216,6 +190,8 @@ public class VehicleRegistrationForm extends JFrame {
         formPanel.add(picField, gbc);
 
         JButton uploadButton = new JButton("Cargar Foto");
+        uploadButton.setBackground(Color.decode("#010035"));
+        uploadButton.setForeground(Color.WHITE);
         uploadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -230,8 +206,7 @@ public class VehicleRegistrationForm extends JFrame {
         gbc.gridx = 2;
         gbc.gridwidth = 1;
         formPanel.add(uploadButton, gbc);
-        
-        
+
         // Tipo de transacción (venta o renta)
         gbc.gridx = 0;
         gbc.gridy++;
@@ -261,60 +236,260 @@ public class VehicleRegistrationForm extends JFrame {
         rentalDaysField.setEnabled(false); // Por defecto, deshabilitado
         gbc.gridx = 1;
         formPanel.add(rentalDaysField, gbc);
+
         // Submit Button
         gbc.gridx = 0;
         gbc.gridy++;
         gbc.gridwidth = 3;
-        JButton submitButton = new JButton("Registrar");
+        submitButton = new JButton("Registrar");
+        submitButton.setBackground(Color.decode("#010035"));
+        submitButton.setForeground(Color.WHITE);
         submitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        submitButton.addActionListener(new ActionListener() {
+        formPanel.add(submitButton, gbc);
+        
+        // Botón para guardar cambios
+        saveChangesButton = new JButton("Guardar Cambios");
+        saveChangesButton.setBackground(Color.decode("#010035"));
+        saveChangesButton.setForeground(Color.WHITE);
+        saveChangesButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        saveChangesButton.setVisible(false); // Inicialmente no visible
+        formPanel.add(saveChangesButton, gbc);
+        
+        
+
+        // Acción para el botón "Guardar Cambios"
+        saveChangesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Lógica para procesar el formulario aquí...
-                JOptionPane.showMessageDialog(null, "Formulario enviado correctamente");
+                // Obtener el índice de la fila seleccionada en la tabla
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow != -1) {
+                    // Obtener el vehículo seleccionado
+                    Vehiculo vehiculo = vehiculos.get(selectedRow);
+
+                    // Actualizar los datos del vehículo con los datos del formulario
+                    vehiculo.setOwnerName(nameField.getText());
+                    vehiculo.setOwnerLastname(lastNameField.getText());
+                    vehiculo.setOwnerId(idField.getText());
+                    vehiculo.setOwnerPhone(phoneField.getText());
+                    vehiculo.setOwnerAddress(addressField.getText());
+                    vehiculo.setVehiclePlate(plateField.getText());
+                    vehiculo.setVehicleBrand((String) brandComboBox.getSelectedItem());
+                    vehiculo.setVehicleModel((String) modelComboBox.getSelectedItem());
+                    vehiculo.setVehicleYear(Integer.parseInt(yearField.getText()));
+                    vehiculo.setVehicleColor(colorField.getText());
+                    vehiculo.setVehiclePic(picField.getText());
+
+                    // Renderizar la tabla con los vehículos actualizados
+                    renderTable();
+
+                    // Limpiar los campos del formulario después de editar el vehículo
+                    clearForm();
+
+                    // Desactivar el botón "Guardar Cambios" y activar el botón "Registrar"
+                    saveChangesButton.setVisible(false);
+                    submitButton.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Por favor, selecciona un vehículo para editar.");
+                }
             }
         });
-        formPanel.add(submitButton, gbc);
 
-        add(formPanel, BorderLayout.WEST);
+        add(formPanel, BorderLayout.WEST); // Añadir formPanel al JFrame
 
         // Table Panel
         tablePanel = new JPanel();
         tablePanel.setBackground(Color.decode("#b6b6b6"));
-        add(tablePanel, BorderLayout.EAST);
+        tablePanel.setLayout(new BorderLayout()); // Asegurar el layout del panel
 
-        // Inicializar y configurar la tabla
-        initializeTable();
-
-        // Empaquetar y hacer visible la ventana
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
-
-    }
-    
-     private void initializeTable() {
-        tableModel = new DefaultTableModel();
-        tableModel.addColumn("Año");
-        tableModel.addColumn("Modelo");
-        tableModel.addColumn("Marca");
-        tableModel.addColumn("Placa");
-        tableModel.addColumn("Acciones");
-
+        // Configuración de la tabla
+        String[] columnNames = {"Año", "Marca", "Modelo", "Placa", "Ver", "Editar", "Eliminar"};
+        tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
 
-        // Configuración de la columna de acciones
-        TableColumn actionsColumn = table.getColumnModel().getColumn(4);
-        actionsColumn.setCellRenderer(new ButtonRenderer());
-        actionsColumn.setCellEditor(new ButtonEditor(new JCheckBox()));
+        // Configuración de los renderizadores y editores de botones
+        table.getColumn("Ver").setCellRenderer(new ButtonRenderer("Ver"));
+        table.getColumn("Ver").setCellEditor(new ButtonEditor("Ver"));
+        table.getColumn("Editar").setCellRenderer(new ButtonRenderer("Editar"));
+        table.getColumn("Editar").setCellEditor(new ButtonEditor("Editar"));
+        table.getColumn("Eliminar").setCellRenderer(new ButtonRenderer("Eliminar"));
+        table.getColumn("Eliminar").setCellEditor(new ButtonEditor("Eliminar"));
 
+        // Añadir la tabla a un JScrollPane y agregarlo al JFrame
         JScrollPane scrollPane = new JScrollPane(table);
-        tablePanel.setLayout(new BorderLayout());
-        tablePanel.add(scrollPane, BorderLayout.CENTER);
+        add(scrollPane, BorderLayout.CENTER);
+
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Crear un nuevo objeto Vehiculo con los valores del formulario
+                Vehiculo vehiculo = new Vehiculo(
+                        nameField.getText(),
+                        lastNameField.getText(),
+                        idField.getText(),
+                        phoneField.getText(),
+                        addressField.getText(),
+                        plateField.getText(),
+                        (String) brandComboBox.getSelectedItem(),
+                        (String) modelComboBox.getSelectedItem(),
+                        Integer.parseInt(yearField.getText()),
+                        colorField.getText(),
+                        picField.getText()
+                );
+
+                // Agregar el vehículo a la lista
+                vehiculos.add(vehiculo);
+
+                // Renderizar la tabla con los vehículos actualizados
+                renderTable();
+
+                // Limpiar los campos del formulario después de agregar el vehículo
+                clearForm();
+            }
+        });
+
+        // Inicialmente renderiza la tabla
+        renderTable();
+
+        // Ajustar el tamaño del JFrame
+        setSize(1000, 600);
+        setLocationRelativeTo(null); // Centrar la ventana en la pantalla
+    }
+
+    // Método para renderizar la tabla con los vehículos almacenados en la lista
+    class ButtonRenderer extends JButton implements TableCellRenderer {
+        public ButtonRenderer(String text) {
+            super(text);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            return this;
+        }
+    }
+
+    // Clase interna para editar botones en la tabla
+    class ButtonEditor extends AbstractCellEditor implements TableCellEditor {
+        private final JButton button;
+        private final String label;
+        private int editingRow;
+
+        public ButtonEditor(String text) {
+            button = new JButton(text);
+            label = text;
+
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (label.equals("Editar")) {
+                        // Al hacer clic en el botón de editar, cargar los datos en el formulario
+                        loadFormData(editingRow);
+                    } else if (label.equals("Eliminar")) {
+                        // Eliminar la fila correspondiente cuando se hace clic en el botón de eliminar
+                        vehiculos.remove(editingRow);
+                        renderTable();
+                    } else if (label.equals("Ver")) {
+                        // Mostrar los datos del vehículo en una ventana emergente
+                        showVehicleDetails(editingRow);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            editingRow = row;
+            return button;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return label;
+        }
+    }
+
+    // Método para cargar los datos del vehículo en el formulario de edición
+    private void loadFormData(int row) {
+        Vehiculo vehiculo = vehiculos.get(row);
+        // Asignar los datos del vehículo a los campos del formulario
+        nameField.setText(vehiculo.getOwnerName());
+        lastNameField.setText(vehiculo.getOwnerLastname());
+        idField.setText(vehiculo.getOwnerId());
+        phoneField.setText(vehiculo.getOwnerPhone());
+        addressField.setText(vehiculo.getOwnerAddress());
+        plateField.setText(vehiculo.getVehiclePlate());
+        yearField.setText(Integer.toString(vehiculo.getVehicleYear()));
+        brandComboBox.setSelectedItem(vehiculo.getVehicleBrand());
+        modelComboBox.setSelectedItem(vehiculo.getVehicleModel());
+        colorField.setText(vehiculo.getVehicleColor());
+        picField.setText(vehiculo.getVehiclePic());
+
+        // Mostrar el botón "Guardar Cambios" y ocultar el botón "Registrar"
+        saveChangesButton.setVisible(true);
+        submitButton.setVisible(false);
     }
     
+     private void showVehicleDetails(int row) {
+        Vehiculo vehiculo = vehiculos.get(row);
+
+        // Construir el mensaje con todos los detalles del vehículo
+        StringBuilder message = new StringBuilder();
+        message.append("Nombre del propietario: ").append(vehiculo.getOwnerName()).append("\n");
+        message.append("Apellido del propietario: ").append(vehiculo.getOwnerLastname()).append("\n");
+        message.append("Cédula del propietario: ").append(vehiculo.getOwnerId()).append("\n");
+        message.append("Teléfono del propietario: ").append(vehiculo.getOwnerPhone()).append("\n");
+        message.append("Dirección del propietario: ").append(vehiculo.getOwnerAddress()).append("\n");
+        message.append("Placa del vehículo: ").append(vehiculo.getVehiclePlate()).append("\n");
+        message.append("Año del vehículo: ").append(vehiculo.getVehicleYear()).append("\n");
+        message.append("Marca del vehículo: ").append(vehiculo.getVehicleBrand()).append("\n");
+        message.append("Modelo del vehículo: ").append(vehiculo.getVehicleModel()).append("\n");
+        message.append("Color del vehículo: ").append(vehiculo.getVehicleColor()).append("\n");
+        message.append("Tipo de transacción: ").append(transactionTypeComboBox.getSelectedItem()).append("\n");
+
+        // Mostrar la ventana emergente con los detalles del vehículo
+        JOptionPane.showMessageDialog(null, message.toString(), "Detalles del Vehículo", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+
+    // Método para renderizar la tabla con los vehículos almacenados en la lista
+    private void renderTable() {
+        // Limpiar la tabla existente
+        tableModel.setRowCount(0);
+
+        // Iterar sobre la lista de vehículos y agregarlos a la tabla
+        for (Vehiculo vehiculo : vehiculos) {
+            tableModel.addRow(new Object[]{
+                    vehiculo.getVehicleYear(),
+                    vehiculo.getVehicleBrand(),
+                    vehiculo.getVehicleModel(),
+                    vehiculo.getVehiclePlate(),
+                    "Ver",
+                    "Editar",
+                    "Eliminar"
+            });
+        }
+    }
+
+    // Método para limpiar los campos del formulario
+    private void clearForm() {
+        nameField.setText("");
+        lastNameField.setText("");
+        idField.setText("");
+        phoneField.setText("");
+        addressField.setText("");
+        plateField.setText("");
+        yearField.setText("");
+        brandComboBox.setSelectedIndex(0);
+        modelComboBox.setSelectedIndex(0);
+        colorField.setText("");
+        colorField.setBackground(Color.WHITE);
+        picField.setText("");
+    }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new VehicleRegistrationForm());
+        SwingUtilities.invokeLater(() -> {
+            VehicleRegistrationForm form = new VehicleRegistrationForm();
+            form.setVisible(true);
+        });
     }
 }
